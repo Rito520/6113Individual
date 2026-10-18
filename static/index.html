@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>奖学金分发系统 · Scholarship DApp</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <!-- ethers.js v6 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">🎓 Scholarship DApp</div>
+    <div class="wallet-area">
+      <span id="networkBadge" class="badge badge-muted">未连接</span>
+      <span id="accountBadge" class="badge badge-muted">—</span>
+      <button id="connectBtn" class="btn btn-primary">连接钱包</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 提示区 -->
+    <section id="notice" class="notice hidden"></section>
+
+    <!-- Tab 导航 -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="scholarships">奖学金项目</button>
+      <button class="tab" data-tab="apply">申请奖学金</button>
+      <button class="tab" data-tab="claim">领取与历史</button>
+      <button class="tab" data-tab="admin">管理员</button>
+    </nav>
+
+    <!-- 奖学金列表 -->
+    <section id="tab-scholarships" class="tab-panel active">
+      <h2>奖学金项目列表</h2>
+      <div id="scholarshipList" class="card-grid">
+        <div class="card"><p class="muted">正在加载…</p></div>
+      </div>
+    </section>
+
+    <!-- 申请 -->
+    <section id="tab-apply" class="tab-panel">
+      <h2>申请奖学金</h2>
+      <div class="card form-card">
+        <label>选择项目</label>
+        <select id="applyScholarshipId" class="input"></select>
+
+        <label>姓名</label>
+        <input id="studentName" class="input" placeholder="输入真实姓名" />
+
+        <label>学号</label>
+        <input id="studentId" class="input" placeholder="输入学号（可选）" />
+
+        <button id="applyBtn" class="btn btn-primary btn-block">① 登记资料 → ② 链上申请</button>
+        <p id="applyHint" class="hint"></p>
+      </div>
+    </section>
+
+    <!-- 领取与历史 -->
+    <section id="tab-claim" class="tab-panel">
+      <h2>领取奖学金</h2>
+      <div class="card form-card">
+        <p>选择已获认定的奖学金项目并领取。每名学生每个项目仅可领取一次。</p>
+        <select id="claimScholarshipId" class="input"></select>
+        <button id="claimBtn" class="btn btn-success btn-block">领取奖学金（MetaMask 签名）</button>
+        <p id="claimHint" class="hint"></p>
+      </div>
+
+      <h2>我的链上交易历史</h2>
+      <table class="table">
+        <thead>
+          <tr><th>类型</th><th>金额(ETH)</th><th>状态</th><th>交易哈希</th><th>区块</th></tr>
+        </thead>
+        <tbody id="txTable">
+          <tr><td colspan="5" class="muted">暂无记录</td></tr>
+        </tbody>
+      </table>
+      <button id="refreshTxBtn" class="btn btn-outline">刷新历史</button>
+    </section>
+
+    <!-- 管理员 -->
+    <section id="tab-admin" class="tab-panel">
+      <div class="card form-card">
+        <h2>创建奖学金项目（仅管理员）</h2>
+        <label>项目名称</label>
+        <input id="schName" class="input" placeholder="如：学术卓越奖学金" />
+
+        <label>单生金额 (ETH)</label>
+        <input id="schMaxAward" class="input" type="number" step="0.01" min="0" placeholder="1.0" />
+
+        <label>名额</label>
+        <input id="schLimit" class="input" type="number" step="1" min="1" placeholder="5" />
+
+        <button id="createBtn" class="btn btn-warn btn-block">创建项目（转入托管资金）</button>
+      </div>
+
+      <div class="card form-card">
+        <h2>认定获奖者（仅管理员）</h2>
+        <label>项目 ID</label>
+        <input id="approveSchId" class="input" type="number" min="0" placeholder="0" />
+        <label>学生钱包地址</label>
+        <input id="approveAddr" class="input" placeholder="0x..." />
+        <button id="approveBtn" class="btn btn-warn btn-block">认定获奖者</button>
+      </div>
+      <p id="adminHint" class="hint"></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="footerNetwork">运行环境读取中…</span> · 智能合约 ScholarshipDistributor.sol
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

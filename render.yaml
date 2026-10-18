@@ -1,0 +1,26 @@
+# Render 蓝图（Blueprint）：一键创建 Web Service。
+# 在 Render Dashboard -> New -> Blueprint 选择本仓库即可自动读取此文件。
+# 也可忽略本文件，手动创建 Web Service 并按 DEPLOY_GUIDE.md 填写命令与环境变量。
+services:
+  - type: web
+    name: scholarship-dapp
+    runtime: python
+    plan: free
+    region: singapore            # 离新加坡最近，冷启动与访问延迟更低
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      # 下面三项需在部署后、拿到 Sepolia 合约地址时填入真实值：
+      - key: CONTRACT_ADDRESS
+        sync: false              # sync:false 表示由你在 Render 控制台手动填写
+      - key: RPC_URL
+        value: https://ethereum-sepolia-rpc.publicnode.com
+      - key: CHAIN_ID
+        value: "11155111"
+      - key: EVENT_SCAN_BLOCKS
+        value: "5000"
+      - key: ENABLE_INDEXER
+        value: "1"

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang='zh'><head><meta charset='utf-8'>
+<title>后端 API 冒烟测试报告</title>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;margin:36px;background:#f7f9fc;color:#1f2937}
+h1{font-size:23px;border-bottom:3px solid #2563eb;padding-bottom:10px}
+h2{font-size:17px;margin-top:22px}
+.meta{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:13.5px}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th,td{border:1px solid #e5e7eb;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#2563eb;color:#fff}
+tr:nth-child(even){background:#f9fafb}
+.pass{color:#16a34a;font-weight:700}
+.fail{color:#dc2626;font-weight:700}
+.brief{font-family:Consolas,monospace;font-size:12px;color:#4b5563}
+.summary{background:#dff3e4;border:1px solid #86d99a;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:600;margin-top:16px}
+</style></head><body>
+<h1>奖学金分发系统 — 后端 API 冒烟测试报告</h1>
+<div class='meta'><b>目标服务:</b> Flask 后端 @ <code>http://127.0.0.1:5000</code> &nbsp;|&nbsp; <b>测试时间:</b> 2026-10-15 23:58:12<br>
+<b>覆盖能力:</b> 健康检查 / 链上数据同步 / 学生登记(输入校验+幂等) / 申请预审(授权校验+404) / 交易历史(校验与索引)</div>
+<table><tr><th>用例</th><th>场景</th><th>请求</th><th>预期</th><th>实际</th><th>结果</th><th>耗时</th><th>响应片段</th></tr>
+<tr><td>API-01</td><td>服务健康检查</td><td>GET /api/health</td><td>200</td><td>200</td><td class='pass'>通过</td><td>23.8ms</td><td class='brief'>{"status": "ok", "time": 1792079891.8543475}</td></tr><tr><td>API-02</td><td>读取奖学金项目列表(链上同步)</td><td>GET /api/scholarships</td><td>200</td><td>200</td><td class='pass'>通过</td><td>8.5ms</td><td class='brief'>{"data": [{"active": false, "claimedAmount": 4.0, "id": 0, "maxAward": 1.0, "nam</td></tr><tr><td>API-03</td><td>空钱包地址被拒(输入校验)</td><td>POST /api/students/register</td><td>400</td><td>400</td><td class='pass'>通过</td><td>24.1ms</td><td class='brief'>{"error": "钱包地址无效"}</td></tr><tr><td>API-04</td><td>正常学生资料登记</td><td>POST /api/students/register</td><td>201</td><td>201</td><td class='pass'>通过</td><td>24.9ms</td><td class='brief'>{"address": "0x1111111111111111111111111111111111111111", "ok": true}</td></tr><tr><td>API-05</td><td>重复登记更新资料(幂等)</td><td>POST /api/students/register</td><td>201</td><td>201</td><td class='pass'>通过</td><td>16.5ms</td><td class='brief'>{"address": "0x1111111111111111111111111111111111111111", "ok": true}</td></tr><tr><td>API-06</td><td>非法地址被拒(输入校验)</td><td>POST /api/scholarships/0/apply</td><td>400</td><td>400</td><td class='pass'>通过</td><td>8.1ms</td><td class='brief'>{"error": "钱包地址无效"}</td></tr><tr><td>API-07</td><td>未登记学生申请被拒(授权校验)</td><td>POST /api/scholarships/0/apply</td><td>403</td><td>403</td><td class='pass'>通过</td><td>31.3ms</td><td class='brief'>{"error": "请先完成学生资料登记"}</td></tr><tr><td>API-08</td><td>已登记学生申请活跃项目预审通过(令牌签发)</td><td>POST /api/scholarships/2/apply</td><td>200</td><td>200</td><td class='pass'>通过</td><td>32.7ms</td><td class='brief'>{"ok": true, "scholarshipId": 2, "token": "voucher-2-0x1111111111111111111111111</td></tr><tr><td>API-09</td><td>申请已关闭项目被拒(业务规则)</td><td>POST /api/scholarships/0/apply</td><td>400</td><td>400</td><td class='pass'>通过</td><td>13.9ms</td><td class='brief'>{"error": "项目已关闭"}</td></tr><tr><td>API-10</td><td>不存在的项目返回 404</td><td>POST /api/scholarships/9999/apply</td><td>404</td><td>404</td><td class='pass'>通过</td><td>31.8ms</td><td class='brief'>{"error": "奖学金项目不存在"}</td></tr><tr><td>API-11</td><td>非法地址查询交易被拒</td><td>GET /api/transactions?address=not-an-address</td><td>400</td><td>400</td><td class='pass'>通过</td><td>7.7ms</td><td class='brief'>{"error": "钱包地址无效"}</td></tr><tr><td>API-12</td><td>查询链上交易历史(索引)</td><td>GET /api/transactions?address=0x1111111111111111111111111111111111111111</td><td>200</td><td>200</td><td class='pass'>通过</td><td>10.7ms</td><td class='brief'>{"data": []}</td></tr>
+</table>
+<div class='summary'>汇总: 12/12 用例通过 · 后端与前端集成可用 · 输入校验与错误处理已验证</div>
+</body></html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang='zh'><head><meta charset='utf-8'>
+<title>链上测试结果 - ScholarshipDistributor</title>
+<style>
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;margin:40px;background:#f7f9fc;color:#1f2937}
+h1{font-size:24px;border-bottom:3px solid #2563eb;padding-bottom:10px}
+.meta{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:14px 18px;margin:14px 0;font-size:14px}
+table{border-collapse:collapse;width:100%;background:#fff;font-size:13.5px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+th,td{border:1px solid #e5e7eb;padding:8px 12px;text-align:left;vertical-align:top}
+th{background:#2563eb;color:#fff;font-weight:600}
+tr:nth-child(even){background:#f9fafb}
+.pass{color:#16a34a;font-weight:700}
+.fail{color:#dc2626;font-weight:700}
+.summary{background:#dff3e4;border:1px solid #86d99a;border-radius:8px;padding:12px 18px;font-size:15px;font-weight:600;margin-top:18px}
+</style></head><body>
+<h1>智能合约链上全流程测试报告</h1>
+<div class='meta'><b>合约:</b> ScholarshipDistributor.sol &nbsp;|&nbsp; <b>测试链:</b> 本地以太坊节点 (chainId=31337) &nbsp;|&nbsp;
+<b>合约地址:</b> <code>0x0B306BF915C4d645ff596e518fAf3F9669b97016</code><br>
+<b>部署区块:</b> 43 &nbsp;|&nbsp; <b>部署 gas:</b> 2794214 &nbsp;|&nbsp; <b>管理员:</b> <code>0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266</code></div>
+<table><tr><th>用例</th><th>场景</th><th>结果</th><th>说明</th></tr>
+<tr><td>TC01</td><td>合约部署</td><td class='pass'>PASS</td><td>地址=0x0B306BF915C4d645ff596e518fAf3F9669b97016 gas=2794214</td></tr><tr><td>TC02</td><td>管理员创建奖学金(托管5 ETH)</td><td class='pass'>PASS</td><td>id=0 count=1</td></tr><tr><td>TC03</td><td>学生A/B/C/D注册成功</td><td class='pass'>PASS</td><td>registered=[True, True, True, True]</td></tr><tr><td>TC04</td><td>重复注册应回滚</td><td class='pass'>PASS</td><td>Already registered</td></tr><tr><td>TC05</td><td>未注册学生申请应回滚</td><td class='pass'>PASS</td><td>Register first</td></tr><tr><td>TC06</td><td>四名学生提交申请</td><td class='pass'>PASS</td><td>applicants=[True, True, True, True]</td></tr><tr><td>TC07</td><td>重复申请应回滚</td><td class='pass'>PASS</td><td>Already applied</td></tr><tr><td>TC08</td><td>管理员认定4名获奖者</td><td class='pass'>PASS</td><td>recipients=['0x70997970C51812dc3A010C7d01b50e0d17dc79C8', '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC', '0x90F79bf6EB2c4f870365E785982E1f101E93b906', '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65']</td></tr><tr><td>TC09</td><td>重复认定同一学生应回滚</td><td class='pass'>PASS</td><td>Already a recipient</td></tr><tr><td>TC10</td><td>非管理员创建奖学金应回滚</td><td class='pass'>PASS</td><td>Only owner</td></tr><tr><td>TC11</td><td>非管理员认定获奖者应回滚</td><td class='pass'>PASS</td><td>Only owner</td></tr><tr><td>TC12</td><td>非管理员关闭项目应回滚</td><td class='pass'>PASS</td><td>Only owner</td></tr><tr><td>TC13</td><td>非管理员回收资金应回滚</td><td class='pass'>PASS</td><td>Only owner</td></tr><tr><td>TC14</td><td>限额=0创建应回滚</td><td class='pass'>PASS</td><td>Max award must be > 0</td></tr><tr><td>TC15</td><td>资金不足创建应回滚</td><td class='pass'>PASS</td><td>Funds less than total budget</td></tr><tr><td>TC16</td><td>申请不存在的项目应回滚</td><td class='pass'>PASS</td><td>Scholarship does not exist</td></tr><tr><td>TC17</td><td>零资金创建应回滚</td><td class='pass'>PASS</td><td>Total amount must be > 0</td></tr><tr><td>TC18</td><td>学生A领取1 ETH</td><td class='pass'>PASS</td><td>余额净增0.9999 ETH(已扣gas) claimedAmount=1 ETH</td></tr><tr><td>TC19</td><td>重复领取应回滚</td><td class='pass'>PASS</td><td>Already claimed</td></tr><tr><td>TC20</td><td>非获奖者领取应回滚</td><td class='pass'>PASS</td><td>Not an approved recipient</td></tr><tr><td>TC21</td><td>学生B/C/D领取完毕</td><td class='pass'>PASS</td><td>claimed total=4 ETH</td></tr><tr><td>TC22</td><td>管理员关闭项目</td><td class='pass'>PASS</td><td>active=false</td></tr><tr><td>TC23</td><td>回收剩余1 ETH</td><td class='pass'>PASS</td><td>owner净增1.0000 ETH(含找回的1 ETH、扣2笔gas)</td></tr><tr><td>TC24</td><td>二次回收应回滚</td><td class='pass'>PASS</td><td>Nothing to withdraw</td></tr><tr><td>TC25</td><td>第二项目全流程冒烟通过</td><td class='pass'>PASS</td><td>id=1 注册→申请→认定→领取</td></tr><tr><td>TC26</td><td>事件审计完整</td><td class='pass'>PASS</td><td>ScholarshipCreated×1; RecipientApproved×4; AwardClaimed×1; ScholarshipClosed×1; FundsWithdrawn×1</td></tr>
+</table>
+<div class='summary'>汇总: 26/26 用例通过 · 耗时 1.0s · 覆盖 部署/创建/注册/申请/认定/领取/关闭/回收/权限/参数校验/事件审计</div>
+</body></html>

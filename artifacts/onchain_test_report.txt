@@ -1,0 +1,48 @@
+==============================================================================
+智能合约链上全流程测试报告 — ScholarshipDistributor
+本地测试链 chainId=31337  节点=http://127.0.0.1:8545
+==============================================================================
+合约地址: 0x0B306BF915C4d645ff596e518fAf3F9669b97016
+部署区块: 43  部署gas消耗: 2794214
+管理员(owner): 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+
+用例    场景                                  结果    说明
+------------------------------------------------------------------------------
+TC01  合约部署                                PASS  地址=0x0B306BF915C4d645ff596e518fAf3F9669b97016 gas=2794214
+TC02  管理员创建奖学金(托管5 ETH)                   PASS  id=0 count=1
+TC03  学生A/B/C/D注册成功                       PASS  registered=[True, True, True, True]
+TC04  重复注册应回滚                             PASS  Already registered
+TC05  未注册学生申请应回滚                          PASS  Register first
+TC06  四名学生提交申请                            PASS  applicants=[True, True, True, True]
+TC07  重复申请应回滚                             PASS  Already applied
+TC08  管理员认定4名获奖者                          PASS  recipients=['0x70997970C51812dc3A010C7d01b50e0d17dc79C8', '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC', '0x90F79bf6EB2c4f870365E785982E1f101E93b906', '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65']
+TC09  重复认定同一学生应回滚                         PASS  Already a recipient
+TC10  非管理员创建奖学金应回滚                        PASS  Only owner
+TC11  非管理员认定获奖者应回滚                        PASS  Only owner
+TC12  非管理员关闭项目应回滚                         PASS  Only owner
+TC13  非管理员回收资金应回滚                         PASS  Only owner
+TC14  限额=0创建应回滚                           PASS  Max award must be > 0
+TC15  资金不足创建应回滚                           PASS  Funds less than total budget
+TC16  申请不存在的项目应回滚                         PASS  Scholarship does not exist
+TC17  零资金创建应回滚                            PASS  Total amount must be > 0
+TC18  学生A领取1 ETH                          PASS  余额净增0.9999 ETH(已扣gas) claimedAmount=1 ETH
+TC19  重复领取应回滚                             PASS  Already claimed
+TC20  非获奖者领取应回滚                           PASS  Not an approved recipient
+TC21  学生B/C/D领取完毕                         PASS  claimed total=4 ETH
+TC22  管理员关闭项目                             PASS  active=false
+TC23  回收剩余1 ETH                           PASS  owner净增1.0000 ETH(含找回的1 ETH、扣2笔gas)
+TC24  二次回收应回滚                             PASS  Nothing to withdraw
+TC25  第二项目全流程冒烟通过                         PASS  id=1 注册→申请→认定→领取
+TC26  事件审计完整                              PASS  ScholarshipCreated×1; RecipientApproved×4; AwardClaimed×1; ScholarshipClosed×1; FundsWithdrawn×1
+------------------------------------------------------------------------------
+汇总: 26/26 用例通过 · 耗时1.0s · 合约=0x0B306BF915C4d645ff596e518fAf3F9669b97016 · 部署块=43
+
+捕获的关键事件:
+  ScholarshipCreated: {'id': '0', 'name': 'Academic Excellence Scholarship', 'totalAmount': '5000000000000000000', 'maxAward': '1000000000000000000', 'studentLimit': '4'}
+  RecipientApproved: {'scholarshipId': '0', 'student': '0x70997970C51812dc3A010C7d01b50e0d17dc79C8', 'amount': '1000000000000000000'}
+  RecipientApproved: {'scholarshipId': '0', 'student': '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC', 'amount': '1000000000000000000'}
+  RecipientApproved: {'scholarshipId': '0', 'student': '0x90F79bf6EB2c4f870365E785982E1f101E93b906', 'amount': '1000000000000000000'}
+  RecipientApproved: {'scholarshipId': '0', 'student': '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65', 'amount': '1000000000000000000'}
+  AwardClaimed: {'scholarshipId': '0', 'student': '0x70997970C51812dc3A010C7d01b50e0d17dc79C8', 'amount': '1000000000000000000', 'timestamp': '1792079433'}
+  ScholarshipClosed: {'scholarshipId': '0'}
+  FundsWithdrawn: {'scholarshipId': '0', 'amount': '1000000000000000000'}
